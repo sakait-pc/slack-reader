@@ -19,7 +19,7 @@ module.exports = {
     project: ['./tsconfig.json'],
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint'],
-  ignorePatterns: ['.eslintrc.cjs'],
+  ignorePatterns: ['.eslintrc.cjs', 'vite.config.ts'],
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, {extensions: ['.js', '.jsx', '.tsx']}],
