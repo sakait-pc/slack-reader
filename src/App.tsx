@@ -3,7 +3,7 @@ const App = () => {
     <div>
       <h1>Hello, Slack Reader.</h1>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
