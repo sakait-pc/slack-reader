@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
-import type {Projects} from './entities';
-import {END_POINT} from './constants';
+import type {Data} from './entities';
+import {END_POINT, initialState} from './constants';
 import TopHeader from './components/Header/TopHeader';
 import SideMenu from './components/SideMenu/SideMenu';
 import TimeLine from './components/TimeLine/TimeLine';
@@ -8,15 +8,20 @@ import {Layout} from 'antd';
 import './App.css';
 
 const App = () => {
-  const [$projects, setProjects] = useState<Projects>([]);
+  const [$data, setData] = useState<Data>(initialState);
 
   useEffect(() => {
-    const f = async () => {
-      const response = await fetch(END_POINT);
-      const projects: Projects = await response.json();
-      setProjects(projects);
+    const fetchDataAsync = async () => {
+      try {
+        const response = await fetch(END_POINT);
+        if (!response.ok) throw new Error(response.statusText);
+        const data: Data = await response.json();
+        setData(data);
+      } catch (e) {
+        console.error('ERROR: fetchDataAsync: ', e);
+      }
     };
-    f();
+    fetchDataAsync();
   }, []);
 
   return (
@@ -24,7 +29,7 @@ const App = () => {
       <TopHeader />
       <Layout>
         <SideMenu />
-        <TimeLine projects={$projects} />
+        <TimeLine data={$data} />
       </Layout>
     </Layout>
   );
