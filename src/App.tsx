@@ -24,13 +24,13 @@ const App = () => {
     fetchDataAsync();
   }, []);
 
-  const {channels} = $data;
+  const {channels, users} = $data;
 
   return (
     <Layout>
       <TopHeader />
       <Layout>
-        <SideMenu channels={channels} />
+        <SideMenu channels={channels} users={users} />
         <TimeLine data={$data} />
       </Layout>
     </Layout>
