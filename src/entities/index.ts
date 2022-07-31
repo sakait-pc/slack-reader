@@ -28,6 +28,7 @@ export interface Post {
 
 export interface PostByChannel {
   channel: string;
+  channelId: string;
   posts: Array<Post>;
 }
 
