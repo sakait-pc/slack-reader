@@ -1,32 +1,52 @@
-import type {Post} from '../../entities';
+import type {TimeLineData} from '../../entities';
 import type {Styles} from '../../styles';
-import {Layout, Row, Col, Typography} from 'antd';
+import {Layout, Space, Row, Typography, Popover} from 'antd';
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
 interface Props {
-  posts: Array<Post>;
+  timeLine: TimeLineData | null;
 }
 
-const TimeLine = ({posts}: Props) => {
+const container = (timeLine: TimeLineData) => {
+  const {
+    channel: {name, topic, purpose},
+    posts,
+  } = timeLine;
+  const title = `#${name}`;
+  const description = <p>{purpose}</p>;
+  return {
+    description,
+    title,
+    topic,
+    posts,
+  };
+};
+
+const TimeLine = ({timeLine}: Props) => {
+  if (timeLine === null) return null;
+  const {description, title, topic, posts} = container(timeLine);
   if (posts.length === 0) return null;
   return (
     <Content>
-      <Row justify="center">
-        <Col>
-          <Title style={styles.title}>Hello, Slack Reader.</Title>
-          <Text>過去のSlack投稿閲覧用アプリです。</Text>
-          <Text>{posts[0].date}</Text>
-        </Col>
+      <Row align="middle" style={styles.header}>
+        <Space>
+          <Popover content={description}>
+            <Title>{title}</Title>
+          </Popover>
+          <Text>{topic}</Text>
+        </Space>
       </Row>
+      {posts.map((post) => (
+        <p key={post.ts}>{post.text}</p>
+      ))}
     </Content>
   );
 };
 
 const styles: Styles = {
-  title: {
-    marginBlock: 16,
-    fontSize: 32,
+  header: {
+    padding: '8px',
   },
 };
 
