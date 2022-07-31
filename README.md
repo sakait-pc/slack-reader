@@ -32,4 +32,4 @@ npm start
 
 You can see running json-server and development server.
 
-When you access `http://localhost:8080/` on your browser, you can use this app.
+When you access `http://localhost:5173/` on your browser, you can use this app.
