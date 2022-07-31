@@ -1,22 +1,25 @@
-import type {Data} from '../../entities';
+import type {Post} from '../../entities';
 import type {Styles} from '../../styles';
-import {Row, Col, Typography} from 'antd';
+import {Layout, Row, Col, Typography} from 'antd';
+const {Content} = Layout;
 const {Text, Title} = Typography;
 
 interface Props {
-  data: Data;
+  posts: Array<Post>;
 }
 
-// TODO: antdのContentを使った方がいいかもしれない
-const TimeLine = ({data}: Props) => {
+const TimeLine = ({posts}: Props) => {
+  if (posts.length === 0) return null;
   return (
-    <Row justify="center">
-      <Col>
-        <Title style={styles.title}>Hello, Slack Reader.</Title>
-        <Text>過去のSlack投稿閲覧用アプリです。</Text>
-        <Text>{data.channels[0]?.name}</Text>
-      </Col>
-    </Row>
+    <Content>
+      <Row justify="center">
+        <Col>
+          <Title style={styles.title}>Hello, Slack Reader.</Title>
+          <Text>過去のSlack投稿閲覧用アプリです。</Text>
+          <Text>{posts[0].date}</Text>
+        </Col>
+      </Row>
+    </Content>
   );
 };
 
