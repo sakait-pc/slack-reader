@@ -37,3 +37,8 @@ export interface Data {
   channels: Array<Channel>;
   posts: Array<PostByChannel>;
 }
+
+export interface TimeLineData {
+  channel: Channel;
+  posts: Array<Post>;
+}

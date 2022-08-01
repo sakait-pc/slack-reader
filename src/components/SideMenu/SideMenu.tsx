@@ -1,4 +1,5 @@
 import type {Channel, User} from '../../entities';
+import {defaultChannelIndex} from '../../constants';
 import {Layout, Menu, Avatar, Image} from 'antd';
 const {Sider} = Layout;
 import type {MenuProps} from 'antd';
@@ -23,11 +24,12 @@ const getItem = (
 interface Props {
   channels: Array<Channel>;
   users: Array<User>;
+  onClickChannel: (channelId: string) => void;
 }
 
-const SideMenu = ({channels, users}: Props) => {
+const SideMenu = ({channels, users, onClickChannel}: Props) => {
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
+    onClickChannel(e.key);
   };
 
   const channelsMenuItems = () => {
@@ -58,6 +60,7 @@ const SideMenu = ({channels, users}: Props) => {
       {existsItems() && (
         <Menu
           onClick={onClick}
+          defaultSelectedKeys={[channels[defaultChannelIndex].id]}
           defaultOpenKeys={['sub1', 'sub2']}
           mode="inline"
           items={items}
