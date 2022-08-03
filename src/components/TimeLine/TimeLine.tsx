@@ -1,3 +1,5 @@
+import {toHTML} from 'slack-markdown';
+import DOMPurify from 'dompurify';
 import type {TimeLineData} from '../../entities';
 import type {Styles} from '../../styles';
 import {Layout, Space, Row, Typography, Popover} from 'antd';
@@ -38,7 +40,12 @@ const TimeLine = ({timeLine}: Props) => {
         </Space>
       </Row>
       {posts.map((post) => (
-        <p key={post.ts}>{post.text}</p>
+        <div
+          key={post.ts}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(toHTML(post.text)),
+          }}
+        />
       ))}
     </Content>
   );

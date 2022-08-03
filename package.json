@@ -13,10 +13,13 @@
   },
   "dependencies": {
     "antd": "^4.21.7",
+    "dompurify": "^2.3.10",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "slack-markdown": "^0.2.0"
   },
   "devDependencies": {
+    "@types/dompurify": "^2.3.3",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
