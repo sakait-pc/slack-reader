@@ -1,1 +1,6 @@
 @import '../node_modules/antd/dist/antd.css';
+
+.s-mention.s-user {
+  background-color: #e8f5fa;
+  color: #1264a3;
+}
