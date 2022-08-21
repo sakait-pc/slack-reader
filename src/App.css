@@ -1,6 +1,11 @@
 @import '../node_modules/antd/dist/antd.css';
 
-.s-mention.s-user {
+.s-mention.s-user,
+.s-mention.s-channel {
   background-color: #e8f5fa;
   color: #1264a3;
+}
+.s-mention.s-at-channel,
+.s-mention.s-at-everyone {
+  background-color: #f6e5b0;
 }
