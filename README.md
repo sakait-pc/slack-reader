@@ -22,7 +22,7 @@ npm i
 
 4. Create a new file `db.json` in the project's root directory.
 
-5. Export data form Slack then add it to the db.json.
+5. Export data from Slack then add it to the db.json.
 
 6. It's done. Let's start this app with custom npm scripts.
 
