@@ -53,7 +53,9 @@ const TimeLine = ({timeLine, openThread}: Props) => {
           />
           {post.replies && (
             <div style={styles.replyBtn}>
-              <Button onClick={() => openThread(post.thread_ts)}>返信</Button>
+              <Button onClick={() => openThread(post.thread_ts)}>
+                {post.reply_count}件の返信
+              </Button>
             </div>
           )}
           <Divider />
