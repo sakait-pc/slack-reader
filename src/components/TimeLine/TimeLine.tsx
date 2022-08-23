@@ -1,6 +1,6 @@
 import {toHTML} from 'slack-markdown';
 import DOMPurify from 'dompurify';
-import type {TimeLineData} from '../../entities';
+import type {TimeLineData, Post} from '../../entities';
 import type {Styles} from '../../styles';
 import {Layout, Space, Row, Typography, Popover, Divider, Button} from 'antd';
 const {Content} = Layout;
@@ -8,15 +8,20 @@ const {Text, Title} = Typography;
 
 interface Props {
   timeLine: TimeLineData | null;
+  openThread: (threadTS: string | undefined) => void;
 }
+
+const filterReplies = (posts: Array<Post>) =>
+  posts.filter((post) => !post.parent_user_id);
 
 const container = (timeLine: TimeLineData) => {
   const {
     channel: {name, topic, purpose},
-    posts,
+    posts: rawPosts,
   } = timeLine;
   const title = `#${name}`;
   const description = <p>{purpose}</p>;
+  const posts = filterReplies(rawPosts);
   return {
     description,
     title,
@@ -25,11 +30,10 @@ const container = (timeLine: TimeLineData) => {
   };
 };
 
-const TimeLine = ({timeLine}: Props) => {
+const TimeLine = ({timeLine, openThread}: Props) => {
   if (timeLine === null) return null;
   const {description, title, topic, posts} = container(timeLine);
   if (posts.length === 0) return null;
-  // TODO: スレッド内の投稿をまとめる
   return (
     <Content style={styles.content}>
       <Row align="middle" style={styles.header}>
@@ -49,7 +53,7 @@ const TimeLine = ({timeLine}: Props) => {
           />
           {post.replies && (
             <div style={styles.replyBtn}>
-              <Button>返信</Button>
+              <Button onClick={() => openThread(post.thread_ts)}>返信</Button>
             </div>
           )}
           <Divider />

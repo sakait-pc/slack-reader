@@ -1,15 +1,17 @@
 import {useState, useEffect} from 'react';
-import type {Data, PostByChannel, TimeLineData} from './entities';
+import type {Data, PostByChannel, TimeLineData, Post} from './entities';
 import {END_POINT, initialState, defaultChannelIndex} from './constants';
 import TopHeader from './components/Header/TopHeader';
 import SideMenu from './components/SideMenu/SideMenu';
 import TimeLine from './components/TimeLine/TimeLine';
+import Thread from './components/Thread/Thread';
 import {Layout} from 'antd';
 import './App.css';
 
 const App = () => {
   const [$data, setData] = useState<Data>(initialState);
   const [$timeLine, setTimeLine] = useState<TimeLineData | null>(null);
+  const [$thread, setThread] = useState<Array<Post> | null>(null);
 
   useEffect(() => {
     const fetchDataAsync = async () => {
@@ -38,6 +40,17 @@ const App = () => {
     setTimeLine({channel, posts: byChannel.posts});
   };
 
+  const openThread = (threadTS: string | undefined) => {
+    if (threadTS === undefined) return;
+    const thread = $timeLine?.posts.filter(
+      (post) => post.thread_ts === threadTS,
+    );
+    if (thread === undefined) return;
+    setThread(thread);
+  };
+
+  const closeThread = () => setThread(null);
+
   const {channels, users} = $data;
 
   return (
@@ -49,7 +62,8 @@ const App = () => {
           users={users}
           onClickChannel={onClickChannel}
         />
-        <TimeLine timeLine={$timeLine} />
+        <TimeLine timeLine={$timeLine} openThread={openThread} />
+        {$thread && <Thread closeThread={closeThread} />}
       </Layout>
     </Layout>
   );
