@@ -63,7 +63,7 @@ const App = () => {
           onClickChannel={onClickChannel}
         />
         <TimeLine timeLine={$timeLine} openThread={openThread} />
-        {$thread && <Thread closeThread={closeThread} />}
+        {$thread && <Thread closeThread={closeThread} thread={$thread} />}
       </Layout>
     </Layout>
   );
