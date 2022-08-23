@@ -1,10 +1,16 @@
-import {Layout} from 'antd';
+import {Layout, Button} from 'antd';
 const {Sider} = Layout;
 
-// ひとまずダミーでコンポーネントを作った
-// TODO: TimeLineの投稿から「返信」ボタン押したら開くようにする
-const Thread = () => {
-  return <Sider style={{color: '#fff'}}>Thread</Sider>;
+interface Props {
+  closeThread: () => void;
+}
+
+const Thread = ({closeThread}: Props) => {
+  return (
+    <Sider style={{color: '#fff'}}>
+      <Button onClick={closeThread}>×</Button>
+    </Sider>
+  );
 };
 
 export default Thread;
