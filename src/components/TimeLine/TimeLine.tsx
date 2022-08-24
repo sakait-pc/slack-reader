@@ -2,6 +2,7 @@ import {toHTML} from 'slack-markdown';
 import DOMPurify from 'dompurify';
 import type {TimeLineData, Post} from '../../entities';
 import type {Styles} from '../../styles';
+import {headerHeight} from '../../styles';
 import {Layout, Space, Row, Typography, Popover, Divider, Button} from 'antd';
 const {Content} = Layout;
 const {Text, Title} = Typography;
@@ -67,7 +68,10 @@ const TimeLine = ({timeLine, openThread}: Props) => {
 
 const styles: Styles = {
   content: {
+    height: `calc(100vh - ${headerHeight})`,
     padding: '16px',
+    overflowWrap: 'break-word',
+    overflowY: 'scroll',
   },
   header: {
     padding: '8px',
