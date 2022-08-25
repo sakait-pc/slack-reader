@@ -53,19 +53,15 @@ const SideMenu = ({channels, users, onClickChannel}: Props) => {
     getItem('Members', 'sub2', null, membersMenuItems()),
   ];
 
-  const existsItems = () => channels.length !== 0 && users.length !== 0;
-
   return (
     <Sider theme="light">
-      {existsItems() && (
-        <Menu
-          onClick={onClick}
-          defaultSelectedKeys={[channels[defaultChannelIndex].id]}
-          defaultOpenKeys={['sub1', 'sub2']}
-          mode="inline"
-          items={items}
-        />
-      )}
+      <Menu
+        onClick={onClick}
+        defaultSelectedKeys={[channels[defaultChannelIndex].id]}
+        defaultOpenKeys={['sub1', 'sub2']}
+        mode="inline"
+        items={items}
+      />
     </Sider>
   );
 };

@@ -4,6 +4,10 @@ export interface User {
   image: string;
 }
 
+export interface UserById {
+  [key: string]: User;
+}
+
 export interface Channel {
   id: string;
   name: string;
@@ -41,4 +45,5 @@ export interface Data {
 export interface TimeLineData {
   channel: Channel;
   posts: Array<Post>;
+  userById: UserById;
 }

@@ -1,36 +1,55 @@
-import {toHTML} from 'slack-markdown';
-import DOMPurify from 'dompurify';
-import type {TimeLineData} from '../../entities';
+import type {TimeLineData, Post} from '../../entities';
 import type {Styles} from '../../styles';
-import {Layout, Space, Row, Typography, Popover} from 'antd';
+import {headerHeight} from '../../styles';
+import {ensure} from '../../utils';
+import {Layout, Space, Row, Typography, Popover, Button} from 'antd';
+import PostItem from '../Common/PostItem';
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
 interface Props {
-  timeLine: TimeLineData | null;
+  timeLine: TimeLineData;
+  openThread: (threadTS: string) => void;
 }
+
+const filterReplies = (posts: Array<Post>) =>
+  posts.filter((post) => !post.parent_user_id);
 
 const container = (timeLine: TimeLineData) => {
   const {
     channel: {name, topic, purpose},
-    posts,
+    posts: rawPosts,
+    userById,
   } = timeLine;
   const title = `#${name}`;
   const description = <p>{purpose}</p>;
+  const posts = filterReplies(rawPosts);
   return {
     description,
     title,
     topic,
     posts,
+    userById,
   };
 };
 
-const TimeLine = ({timeLine}: Props) => {
-  if (timeLine === null) return null;
-  const {description, title, topic, posts} = container(timeLine);
-  if (posts.length === 0) return null;
+const TimeLine = ({timeLine, openThread}: Props) => {
+  const getReplyButton = (post: Post) => {
+    if (post.replies) {
+      return (
+        <div style={styles.replyBtn}>
+          <Button onClick={() => openThread(ensure(post.thread_ts))}>
+            {post.reply_count}
+            <Text style={styles.replyCount}>件の返信</Text>
+          </Button>
+        </div>
+      );
+    }
+  };
+
+  const {description, title, topic, posts, userById} = container(timeLine);
   return (
-    <Content>
+    <Content style={styles.content}>
       <Row align="middle" style={styles.header}>
         <Space>
           <Popover content={description}>
@@ -40,11 +59,11 @@ const TimeLine = ({timeLine}: Props) => {
         </Space>
       </Row>
       {posts.map((post) => (
-        <div
+        <PostItem
           key={post.ts}
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(toHTML(post.text)),
-          }}
+          post={post}
+          user={userById[post.user]}
+          replyButton={getReplyButton(post)}
         />
       ))}
     </Content>
@@ -52,8 +71,20 @@ const TimeLine = ({timeLine}: Props) => {
 };
 
 const styles: Styles = {
+  content: {
+    height: `calc(100vh - ${headerHeight})`,
+    padding: '16px',
+    overflowWrap: 'break-word',
+    overflowY: 'scroll',
+  },
   header: {
     padding: '8px',
+  },
+  replyBtn: {
+    marginTop: '16px',
+  },
+  replyCount: {
+    marginLeft: '4px',
   },
 };
 
