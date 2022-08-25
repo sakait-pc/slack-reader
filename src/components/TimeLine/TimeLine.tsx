@@ -1,15 +1,15 @@
-import {toHTML} from 'slack-markdown';
-import DOMPurify from 'dompurify';
 import type {TimeLineData, Post} from '../../entities';
 import type {Styles} from '../../styles';
 import {headerHeight} from '../../styles';
-import {Layout, Space, Row, Typography, Popover, Divider, Button} from 'antd';
+import {ensure} from '../../utils';
+import {Layout, Space, Row, Typography, Popover, Button} from 'antd';
+import PostItem from '../Common/PostItem';
 const {Content} = Layout;
 const {Text, Title} = Typography;
 
 interface Props {
-  timeLine: TimeLineData | null;
-  openThread: (threadTS: string | undefined) => void;
+  timeLine: TimeLineData;
+  openThread: (threadTS: string) => void;
 }
 
 const filterReplies = (posts: Array<Post>) =>
@@ -19,6 +19,7 @@ const container = (timeLine: TimeLineData) => {
   const {
     channel: {name, topic, purpose},
     posts: rawPosts,
+    userById,
   } = timeLine;
   const title = `#${name}`;
   const description = <p>{purpose}</p>;
@@ -28,13 +29,25 @@ const container = (timeLine: TimeLineData) => {
     title,
     topic,
     posts,
+    userById,
   };
 };
 
 const TimeLine = ({timeLine, openThread}: Props) => {
-  if (timeLine === null) return null;
-  const {description, title, topic, posts} = container(timeLine);
-  if (posts.length === 0) return null;
+  const getReplyButton = (post: Post) => {
+    if (post.replies) {
+      return (
+        <div style={styles.replyBtn}>
+          <Button onClick={() => openThread(ensure(post.thread_ts))}>
+            {post.reply_count}
+            <Text style={styles.replyCount}>件の返信</Text>
+          </Button>
+        </div>
+      );
+    }
+  };
+
+  const {description, title, topic, posts, userById} = container(timeLine);
   return (
     <Content style={styles.content}>
       <Row align="middle" style={styles.header}>
@@ -46,21 +59,12 @@ const TimeLine = ({timeLine, openThread}: Props) => {
         </Space>
       </Row>
       {posts.map((post) => (
-        <div key={post.ts}>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(toHTML(post.text)),
-            }}
-          />
-          {post.replies && (
-            <div style={styles.replyBtn}>
-              <Button onClick={() => openThread(post.thread_ts)}>
-                {post.reply_count}件の返信
-              </Button>
-            </div>
-          )}
-          <Divider />
-        </div>
+        <PostItem
+          key={post.ts}
+          post={post}
+          user={userById[post.user]}
+          replyButton={getReplyButton(post)}
+        />
       ))}
     </Content>
   );
@@ -78,6 +82,9 @@ const styles: Styles = {
   },
   replyBtn: {
     marginTop: '16px',
+  },
+  replyCount: {
+    marginLeft: '4px',
   },
 };
 
