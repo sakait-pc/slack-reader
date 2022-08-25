@@ -1,30 +1,23 @@
-import {toHTML} from 'slack-markdown';
-import DOMPurify from 'dompurify';
-import type {Post} from '../../entities';
+import type {UserById, Post} from '../../entities';
 import type {Styles} from '../../styles';
 import {headerHeight} from '../../styles';
-import {Button, Divider} from 'antd';
+import {Button} from 'antd';
+import PostItem from '../Common/PostItem';
 
 interface Props {
   closeThread: () => void;
   thread: Array<Post>;
+  userById: UserById;
 }
 
-const Thread = ({closeThread, thread}: Props) => {
+const Thread = ({closeThread, thread, userById}: Props) => {
   return (
     <div style={styles.thread}>
       <div style={styles.closeButtonWrap}>
         <Button onClick={closeThread}>X</Button>
       </div>
       {thread.map((post) => (
-        <div key={post.ts}>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(toHTML(post.text)),
-            }}
-          />
-          <Divider />
-        </div>
+        <PostItem key={post.ts} post={post} user={userById[post.user]} />
       ))}
     </div>
   );
