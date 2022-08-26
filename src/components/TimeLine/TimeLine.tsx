@@ -62,7 +62,7 @@ const TimeLine = ({timeLine, openThread}: Props) => {
         <PostItem
           key={post.ts}
           post={post}
-          user={userById[post.user]}
+          userById={userById}
           replyButton={getReplyButton(post)}
         />
       ))}
@@ -81,7 +81,7 @@ const styles: Styles = {
     padding: '8px',
   },
   replyBtn: {
-    marginTop: '16px',
+    marginTop: '8px',
   },
   replyCount: {
     marginLeft: '4px',
