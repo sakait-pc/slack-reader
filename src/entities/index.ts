@@ -15,6 +15,12 @@ export interface Channel {
   purpose: string;
 }
 
+export interface Reaction {
+  name: string;
+  users: Array<string>;
+  count: number;
+}
+
 export interface Post {
   date: string;
   ts: string;
@@ -28,6 +34,7 @@ export interface Post {
   parent_user_id: string | undefined;
   files: Array<any> | undefined;
   attachments: Array<any> | undefined;
+  reactions: Array<Reaction> | undefined;
 }
 
 export interface PostByChannel {

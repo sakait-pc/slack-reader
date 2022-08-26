@@ -1,6 +1,6 @@
 import {toHTML} from 'slack-markdown';
 import DOMPurify from 'dompurify';
-import type {Post, User} from '../../entities';
+import type {Post, UserById} from '../../entities';
 import type {Styles} from '../../styles';
 import {toDate} from '../../utils';
 import {Typography, Avatar, Image, Divider} from 'antd';
@@ -8,27 +8,51 @@ const {Text} = Typography;
 
 interface Props {
   post: Post;
-  user: User;
+  userById: UserById;
   replyButton?: React.ReactNode;
 }
 
-const PostItem = ({post, user, replyButton}: Props) => {
-  const {name, image} = user;
+const PostItem = ({post, userById, replyButton}: Props) => {
+  const {ts, user, text, reactions} = post;
+  const {name, image} = userById[user];
   return (
-    <div key={post.ts}>
+    <div key={ts}>
       <div style={styles.postHeader}>
-        <Avatar src={<Image src={image} style={{width: 32}} />} />
+        <Avatar src={<Image src={image} style={styles.avatar} />} />
         <div style={styles.postTitle}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.date}>{toDate(post.ts)}</Text>
+          <Text style={styles.date}>{toDate(ts)}</Text>
         </div>
       </div>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(toHTML(post.text)),
-        }}
-      />
-      {replyButton}
+      <div style={styles.body}>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(toHTML(text)),
+          }}
+        />
+        <div style={styles.reaction}>
+          {reactions &&
+            reactions.map((reaction, index) => {
+              const title = reaction.users
+                .map((id) => userById[id].name)
+                .join(', ');
+              return (
+                <div key={index}>
+                  <span
+                    title={title}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(toHTML(`:${reaction.name}:`)),
+                    }}
+                  />
+                  {reaction.count > 1 && (
+                    <span style={styles.reactionCount}>{reaction.count}</span>
+                  )}
+                </div>
+              );
+            })}
+        </div>
+        {replyButton}
+      </div>
       <Divider style={styles.divider} />
     </div>
   );
@@ -41,8 +65,14 @@ const styles: Styles = {
     justifyContent: 'flex-start',
     marginBottom: '16px',
   },
+  avatar: {
+    width: 32,
+  },
   postTitle: {
     marginLeft: '8px',
+  },
+  body: {
+    marginLeft: '40px',
   },
   name: {
     fontWeight: 700,
@@ -51,6 +81,13 @@ const styles: Styles = {
   date: {
     marginLeft: '8px',
     fontSize: '14px',
+  },
+  reaction: {
+    display: 'flex',
+    marginTop: '8px',
+  },
+  reactionCount: {
+    marginLeft: '4px',
   },
   divider: {
     borderTop: '1px solid rgba(0, 0, 0, 0.30)',

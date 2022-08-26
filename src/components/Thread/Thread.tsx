@@ -17,7 +17,7 @@ const Thread = ({closeThread, thread, userById}: Props) => {
         <Button onClick={closeThread}>X</Button>
       </div>
       {thread.map((post) => (
-        <PostItem key={post.ts} post={post} user={userById[post.user]} />
+        <PostItem key={post.ts} post={post} userById={userById} />
       ))}
     </div>
   );
