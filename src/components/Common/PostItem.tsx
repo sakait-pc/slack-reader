@@ -1,8 +1,6 @@
-import {toHTML} from 'slack-markdown';
-import DOMPurify from 'dompurify';
 import type {Post, UserById} from '../../entities';
 import type {Styles} from '../../styles';
-import {toDate} from '../../utils';
+import {toDate, sanitizeHTML} from '../../utils';
 import {Typography, Avatar, Image, Divider} from 'antd';
 const {Text} = Typography;
 
@@ -13,7 +11,7 @@ interface Props {
 }
 
 const PostItem = ({post, userById, replyButton}: Props) => {
-  const {ts, user, text, reactions} = post;
+  const {date, ts, user, text, reactions} = post;
   const {name, image} = userById[user];
   return (
     <div key={ts}>
@@ -21,15 +19,11 @@ const PostItem = ({post, userById, replyButton}: Props) => {
         <Avatar src={<Image src={image} style={styles.avatar} />} />
         <div style={styles.postTitle}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.date}>{toDate(ts)}</Text>
+          <Text style={styles.date}>{toDate(date, ts)}</Text>
         </div>
       </div>
       <div style={styles.body}>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(toHTML(text)),
-          }}
-        />
+        <div dangerouslySetInnerHTML={sanitizeHTML(text)} />
         <div style={styles.reaction}>
           {reactions &&
             reactions.map((reaction, index) => {
@@ -40,9 +34,8 @@ const PostItem = ({post, userById, replyButton}: Props) => {
                 <div key={index}>
                   <span
                     title={title}
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(toHTML(`:${reaction.name}:`)),
-                    }}
+                    dangerouslySetInnerHTML={sanitizeHTML(`:${reaction.name}:`)}
+                    style={styles.emoji}
                   />
                   {reaction.count > 1 && (
                     <span style={styles.reactionCount}>{reaction.count}</span>
@@ -63,7 +56,7 @@ const styles: Styles = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: '16px',
+    marginBottom: '8px',
   },
   avatar: {
     width: 32,
@@ -85,6 +78,9 @@ const styles: Styles = {
   reaction: {
     display: 'flex',
     marginTop: '8px',
+  },
+  emoji: {
+    verticalAlign: 'text-bottom',
   },
   reactionCount: {
     marginLeft: '4px',
