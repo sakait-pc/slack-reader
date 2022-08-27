@@ -4,6 +4,41 @@ body {
   overflow: hidden;
 }
 
+code,
+pre {
+  background-color: #efefef;
+  border: 1px solid #d4d4d4;
+  word-wrap: break-word;
+  font-family: Monaco, Menlo, Consolas, Courier New, monospace !important;
+  font-size: 12px;
+  font-variant-ligatures: none;
+  line-height: 1.50001;
+  -webkit-tab-size: 4;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  white-space: pre;
+  white-space: pre-wrap;
+  word-break: normal;
+}
+
+code {
+  border-radius: 3px;
+  padding: 2px 3px 1px;
+  color: #e01e5a;
+}
+
+pre {
+  border-radius: 4px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  padding: 8px;
+}
+
+pre > code {
+  border: none;
+  color: #1d1c1d;
+}
+
 .s-mention.s-user,
 .s-mention.s-channel {
   background-color: #e8f5fa;
