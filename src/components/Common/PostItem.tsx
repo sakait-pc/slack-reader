@@ -11,7 +11,7 @@ interface Props {
 }
 
 const PostItem = ({post, userById, replyButton}: Props) => {
-  const {date, ts, user, text, reactions} = post;
+  const {ts, user, text, reactions} = post;
   const {name, image} = userById[user];
   return (
     <div key={ts}>
@@ -19,7 +19,7 @@ const PostItem = ({post, userById, replyButton}: Props) => {
         <Avatar src={<Image src={image} style={styles.avatar} />} />
         <div style={styles.postTitle}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.date}>{toDate(date, ts)}</Text>
+          <Text style={styles.date}>{toDate(ts)}</Text>
         </div>
       </div>
       <div style={styles.body}>
