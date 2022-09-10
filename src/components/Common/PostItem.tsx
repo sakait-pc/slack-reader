@@ -14,7 +14,7 @@ const PostItem = ({post, userById, replyButton}: Props) => {
   const {ts, user, text, reactions} = post;
   const {name, image} = userById[user];
   return (
-    <div key={ts}>
+    <div>
       <div style={styles.postHeader}>
         <Avatar src={<Image src={image} style={styles.avatar} />} />
         <div style={styles.postTitle}>
