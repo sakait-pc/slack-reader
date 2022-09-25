@@ -6,7 +6,7 @@ export const sanitizeHTML = (text: string) => ({
 });
 
 export const toDate = (timestamp: string) => {
-  const date = new Date(parseInt(timestamp) * 1000);
+  const date = new Date(parseInt(timestamp, 10) * 1000);
   const [slashDate, time] = date.toLocaleString().split(' ');
   const [year, m, d] = slashDate.split('/');
   const mm = `0${m}`.slice(-2);
